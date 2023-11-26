@@ -1,0 +1,33 @@
+[2023-11-26T06:06:00.380+0000] {logging_mixin.py:154} INFO - Changing /opt/***/logs/dag_id=outcomes_dag/run_id=manual__2023-11-26T06:05:56.560980+00:00/task_id=trasform permission to 509
+[2023-11-26T06:06:00.414+0000] {logging_mixin.py:154} INFO - Changing /opt/***/logs/dag_id=outcomes_dag/run_id=manual__2023-11-26T06:05:56.560980+00:00/task_id=trasform permission to 509
+[2023-11-26T06:06:00.453+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: outcomes_dag.trasform manual__2023-11-26T06:05:56.560980+00:00 [queued]>
+[2023-11-26T06:06:00.463+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: outcomes_dag.trasform manual__2023-11-26T06:05:56.560980+00:00 [queued]>
+[2023-11-26T06:06:00.464+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 1
+[2023-11-26T06:06:00.480+0000] {taskinstance.py:1382} INFO - Executing <Task(PythonOperator): trasform> on 2023-11-26 06:05:56.560980+00:00
+[2023-11-26T06:06:00.485+0000] {standard_task_runner.py:57} INFO - Started process 1430 to run task
+[2023-11-26T06:06:00.489+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'outcomes_dag', 'trasform', 'manual__2023-11-26T06:05:56.560980+00:00', '--job-id', '78', '--raw', '--subdir', 'DAGS_FOLDER/outcomes_dag.py', '--cfg-path', '/tmp/tmpbf05seq0']
+[2023-11-26T06:06:00.492+0000] {standard_task_runner.py:85} INFO - Job 78: Subtask trasform
+[2023-11-26T06:06:00.545+0000] {logging_mixin.py:154} INFO - Changing /opt/***/logs/dag_id=outcomes_dag/run_id=manual__2023-11-26T06:05:56.560980+00:00/task_id=trasform permission to 509
+[2023-11-26T06:06:00.548+0000] {task_command.py:416} INFO - Running <TaskInstance: outcomes_dag.trasform manual__2023-11-26T06:05:56.560980+00:00 [running]> on host 50f4a498a395
+[2023-11-26T06:06:00.802+0000] {taskinstance.py:1662} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='outcomes_dag' AIRFLOW_CTX_TASK_ID='trasform' AIRFLOW_CTX_EXECUTION_DATE='2023-11-26T06:05:56.560980+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2023-11-26T06:05:56.560980+00:00'
+[2023-11-26T06:06:00.847+0000] {taskinstance.py:1937} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/etl_scripts/transform.py", line 24, in transform_data
+    dim_animal = prep_animal_dim(new_data)
+  File "/opt/airflow/dags/etl_scripts/transform.py", line 75, in prep_animal_dim
+    animal_dim = data[['Animal ID', 'name', 'Date of Birth',
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/core/frame.py", line 3767, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/core/indexes/base.py", line 5877, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/pandas/core/indexes/base.py", line 5941, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['Animal ID', 'Date of Birth', 'Animal Type', 'Breed', 'Color'] not in index"
+[2023-11-26T06:06:00.866+0000] {taskinstance.py:1400} INFO - Marking task as FAILED. dag_id=outcomes_dag, task_id=trasform, execution_date=20231126T060556, start_date=20231126T060600, end_date=20231126T060600
+[2023-11-26T06:06:00.881+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 78 for task trasform ("['Animal ID', 'Date of Birth', 'Animal Type', 'Breed', 'Color'] not in index"; 1430)
+[2023-11-26T06:06:00.903+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2023-11-26T06:06:00.921+0000] {taskinstance.py:2778} INFO - 0 downstream tasks scheduled from follow-on schedule check

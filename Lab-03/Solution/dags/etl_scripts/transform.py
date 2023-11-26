@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from collections import OrderedDict
-
+from datetime import datetime
 # creating the global mapping for outcome types
 outcomes_map = {'Rto-Adopt': 1,
                 'Adoption': 2,
@@ -9,11 +9,16 @@ outcomes_map = {'Rto-Adopt': 1,
                 'Transfer': 4,
                 'Return to Owner': 5,
                 'Died': 6,
-                'Disposal': 7}
+                'Disposal': 7,
+                'Missing': 8,
+                'Relocate': 9,
+                'N/A': 10,
+                'Stolen': 11
+                }
 
 
-def transform_data(data):
-    new_data = data.copy()
+def transform_data(source_csv):
+    new_data = pd.read_csv(source_csv)
     new_data = prep_data(new_data)
 
     dim_animal = prep_animal_dim(new_data)
@@ -52,13 +57,14 @@ def prep_data(data):
     # prepare the data table for introducing the date dimension
     # we'll use condensed date as the key, e.g. '20231021'
     # time can be a separate dimension, but here we'll keep it as a field
-    data['ts'] = pd.to_datetime(data.DateTime)
+    data['ts'] = pd.to_datetime(data['datetime'])
     data['date_id'] = data.ts.dt.strftime('%Y%m%d')
     data['time'] = data.ts.dt.time
 
     # prepare the data table for introducing the outcome type dimension:
     # introduce keys for the outcomes
-    data['outcome_type_id'] = data['outcome_type'].replace(outcomes_map)
+    data['outcome_type_id'] = data['outcome_type'].fillna('N/A')
+    data['outcome_type_id'] = data['outcome_type_id'].replace(outcomes_map)
 
     return data
 
@@ -66,8 +72,8 @@ def prep_data(data):
 def prep_animal_dim(data):
 
     # extract columns only relevant to animal dim
-    animal_dim = data[['Animal ID', 'name', 'Date of Birth',
-                       'sex', 'Animal Type', 'Breed', 'Color']]
+    animal_dim = data[['animal_id', 'name', 'date_of_birth',
+                       'sex', 'animal_type', 'breed', 'color']]
 
     # rename the columns to agree with the DB tables
     animal_dim.columns = ['animal_id', 'name', 'dob',
@@ -102,6 +108,6 @@ def prep_outcome_types_dim(data):
 
 def prep_outcomes_fct(data):
     # pick the necessary columns and rename
-    outcomes_fct = data[["Animal ID", 'date_id', 'time',
-                         'outcome_type_id', 'Outcome Subtype', 'is_fixed']]
-    return outcomes_fct.rename(columns={"Animal ID": "animal_id", "Outcome Subtype": "outcome_subtype"})
+    outcomes_fct = data[["animal_id", 'date_id', 'time',
+                         'outcome_type_id', 'outcome_subtype', 'is_fixed']]
+    return outcomes_fct.rename(columns={"animal_id": "animal_id", "outcome_subtype": "outcome_subtype"})
